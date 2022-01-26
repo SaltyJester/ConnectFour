@@ -1,7 +1,11 @@
 // dev functions
 
-// board logic
-let board = new Array(6).fill(new Array(7).fill(0)); // row, col
+// board logic, will follow [row][col] format
+let board = [];
+for(let i = 0; i < 6; i++){
+    board.push(new Array(7).fill(0));
+}
+board[2][5] = 1; // test
 console.log(board);
 
 // front end graphics
@@ -19,15 +23,20 @@ function draw(){
 
         for(let row = 0; row < board.length; row++){
             for(let col = 0; col < board[row].length; col++){
+                if(board[row][col] == 0){
+                    ctx.fillStyle = '#EEEEEE';
+                }
+                else{
+                    ctx.fillStyle = '#FFFF00';
+                }
                 ctx.beginPath();
 
                 // remember, row = y and col = x
                 let x = 50 + 100*col;
                 let y = 50 + 100*row;
 
-                console.log(x, y);
                 ctx.arc(x, y, 35, 0, 2*Math.PI);
-                ctx.stroke();
+                ctx.fill();
             }
         }
     }
