@@ -26,6 +26,7 @@ Remember, row = y, col = x
 let canvas = document.getElementById('canvas');
 canvas.addEventListener('click', clickHandler);
 canvas.addEventListener('mousemove', mousemoveHandler);
+canvas.addEventListener('mouseout', mouseoutHandler);
 
 function draw(){
     if(canvas.getContext){
@@ -83,6 +84,13 @@ function mousemoveHandler(event){
     highlight(col);
 }
 
+/*
+Gets rid of column highlight when mouse goes outside of canvas
+*/
+function mouseoutHandler(event){
+    draw();
+}
+
 function getMousePosition(event){
     let rect = event.target.getBoundingClientRect();
     let x = event.clientX - rect.left;
@@ -91,6 +99,10 @@ function getMousePosition(event){
     return col;
 }
 
+/*
+Made this a helper function so I can also use it in clickHandler()
+Otherwise the highlighted column will disappear until mouse moved again
+*/
 function highlight(col){
     ctx.fillStyle = 'rgba(191, 64, 191, 0.5)';
     ctx.beginPath();
