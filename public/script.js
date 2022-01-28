@@ -1,4 +1,10 @@
 /*
+TODO:
+- Column highlighting (to aid players in selecting a column)
+- Work on game logic (determine winners)
+*/
+
+/*
 Board Logic, follows [row][col] format
 0 is empty, 1 is red, 2 is yellow
 "drop[x]" is the next available spot in x column on the board
@@ -19,6 +25,7 @@ Remember, row = y, col = x
 */
 let canvas = document.getElementById('canvas');
 canvas.addEventListener('click', clickHandler);
+canvas.addEventListener('mousemove', mousemoveHandler);
 
 function draw(){
     if(canvas.getContext){
@@ -50,10 +57,7 @@ function draw(){
 }
 
 function clickHandler(event){
-    let rect = event.target.getBoundingClientRect();
-    let x = event.clientX - rect.left;
-    let y = event.clientY - rect.top; // we don't really need this info
-    let col = Math.floor(x/100);
+    let col = getMousePosition(event);
 
     if(drop[col] < 6){
         board[5 - drop[col]][col] = curPlayer;
@@ -65,6 +69,31 @@ function clickHandler(event){
         console.log(drop);
         console.log('col: ' + col);
     }
-
     draw();
+    highlight(col);
+}
+
+/*
+This handler will highlight the empty spaces in a column when a mouse hovers over it.
+Purpose is to aid in column selection.
+*/
+function mousemoveHandler(event){
+    draw(); // need to redraw the board or we'll get multiple highlighting
+    let col = getMousePosition(event);
+    highlight(col);
+}
+
+function getMousePosition(event){
+    let rect = event.target.getBoundingClientRect();
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top; // we don't really need this info
+    let col = Math.floor(x/100);
+    return col;
+}
+
+function highlight(col){
+    ctx.fillStyle = 'rgba(191, 64, 191, 0.5)';
+    ctx.beginPath();
+    ctx.rect(0 + (100 * col), 0, 100, 600);
+    ctx.fill();
 }
