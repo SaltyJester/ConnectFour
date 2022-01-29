@@ -1,6 +1,5 @@
 /*
 TODO:
-- Column highlighting (to aid players in selecting a column)
 - Work on game logic (determine winners)
 */
 
@@ -21,6 +20,36 @@ for(let i = 0; i < 7; i++){
 
 function determineGameState(){
     //
+}
+
+// test cases for checkAcross() (TO BE DELETED LATER)
+
+// for(let i = 0; i < 4; i++){
+//     board[0][i] = 1;
+// }
+// for(let i = 0; i < 4; i++){
+//     board[5][i] = 1;
+// }
+// for(let i = 0; i < 4; i++){
+//     board[0][i + 3] = 1;
+// }
+// for(let i = 0; i < 4; i++){
+//     board[5][i + 3] = 1;
+// }
+// for(let i = 0; i < 4; i++){
+//     board[2][i + 1] = 1;
+// }
+
+function checkAcross(){
+    for(let row = 0; row < board.length; row++){
+        for(let col = board[row].length - 4; col >= 0; col--){
+            result = checkLine(row, col, 0, 1, 4);
+            if(result != 0){
+                return result;
+            }
+        }
+    }
+    return 0;
 }
 
 /*
