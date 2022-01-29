@@ -39,11 +39,49 @@ function determineGameState(){
 // for(let i = 0; i < 4; i++){
 //     board[2][i + 1] = 1;
 // }
+// for(let i = 0; i < 3; i++){
+//     board[2][i + 1] = 1;
+// }
 
 function checkAcross(){
     for(let row = 0; row < board.length; row++){
         for(let col = board[row].length - 4; col >= 0; col--){
             result = checkLine(row, col, 0, 1, 4);
+            if(result != 0){
+                return result;
+            }
+        }
+    }
+    return 0;
+}
+
+// test cases for checkDown() (TO BE DELETED LATER)
+
+for(let i = 0; i < 4; i++){
+    board[i][0] = 1;
+}
+// for(let i = 0; i < 4; i++){
+//     board[5][i] = 1;
+// }
+// for(let i = 0; i < 4; i++){
+//     board[0][i + 3] = 1;
+// }
+// for(let i = 0; i < 4; i++){
+//     board[5][i + 3] = 1;
+// }
+// for(let i = 0; i < 4; i++){
+//     board[2][i + 1] = 1;
+// }
+// for(let i = 0; i < 3; i++){
+//     board[2][i + 1] = 1;
+// }
+
+function checkDown(){
+    for(let col = 0; col < board.length[0]; col++){
+        for(let row = board.length - 4; row >= 0; row--){
+            console.log('did i execute?');
+            // console.log(row + ': ' + col);
+            result = checkLine(row, col, 1, 0, 4);
             if(result != 0){
                 return result;
             }
