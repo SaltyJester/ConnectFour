@@ -19,6 +19,25 @@ for(let i = 0; i < 7; i++){
     drop.push(0);
 }
 
+function determineGameState(){
+    //
+}
+
+/*
+Checks to see if n elements in a line contain the same value
+sr and sc are starting row and starting column respectively
+dr and dc are direction row and direction column respectively
+*/
+function checkLine(sr, sc, dr, dc, len){
+    let val = board[sr][sc];
+    for(let i = 0; i < len; i++){
+        if(board[sr + dr*i][sc + dc*i] != val){
+            return 0;
+        }
+    }
+    return val;
+}
+
 /*
 Canvas Logic
 Remember, row = y, col = x
