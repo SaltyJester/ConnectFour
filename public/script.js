@@ -22,27 +22,6 @@ function determineGameState(){
     //
 }
 
-// test cases for checkAcross() (TO BE DELETED LATER)
-
-// for(let i = 0; i < 4; i++){
-//     board[0][i] = 1;
-// }
-// for(let i = 0; i < 4; i++){
-//     board[5][i] = 1;
-// }
-// for(let i = 0; i < 4; i++){
-//     board[0][i + 3] = 1;
-// }
-// for(let i = 0; i < 4; i++){
-//     board[5][i + 3] = 1;
-// }
-// for(let i = 0; i < 4; i++){
-//     board[2][i + 1] = 1;
-// }
-// for(let i = 0; i < 3; i++){
-//     board[2][i + 1] = 1;
-// }
-
 function checkAcross(){
     for(let row = 0; row < board.length; row++){
         for(let col = board[row].length - 4; col >= 0; col--){
@@ -55,32 +34,9 @@ function checkAcross(){
     return 0;
 }
 
-// test cases for checkDown() (TO BE DELETED LATER)
-
-for(let i = 0; i < 4; i++){
-    board[i][0] = 1;
-}
-// for(let i = 0; i < 4; i++){
-//     board[5][i] = 1;
-// }
-// for(let i = 0; i < 4; i++){
-//     board[0][i + 3] = 1;
-// }
-// for(let i = 0; i < 4; i++){
-//     board[5][i + 3] = 1;
-// }
-// for(let i = 0; i < 4; i++){
-//     board[2][i + 1] = 1;
-// }
-// for(let i = 0; i < 3; i++){
-//     board[2][i + 1] = 1;
-// }
-
 function checkDown(){
-    for(let col = 0; col < board.length[0]; col++){
+    for(let col = 0; col < board[0].length; col++){
         for(let row = board.length - 4; row >= 0; row--){
-            console.log('did i execute?');
-            // console.log(row + ': ' + col);
             result = checkLine(row, col, 1, 0, 4);
             if(result != 0){
                 return result;
@@ -94,6 +50,7 @@ function checkDown(){
 Checks to see if n elements in a line contain the same value
 sr and sc are starting row and starting column respectively
 dr and dc are direction row and direction column respectively
+Returns 0 if line not found, otherwise returns player value
 */
 function checkLine(sr, sc, dr, dc, len){
     let val = board[sr][sc];
