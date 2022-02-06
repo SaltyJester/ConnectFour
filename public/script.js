@@ -46,6 +46,15 @@ function checkDown(){
     return 0;
 }
 
+function checkDiagonal(){
+    // Down Right
+    
+
+    // Down Left
+
+    return 0;
+}
+
 /*
 Checks to see if n elements in a line contain the same value
 sr and sc are starting row and starting column respectively
