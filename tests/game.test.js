@@ -38,6 +38,19 @@ test('unable to add another piece to an already full column', () =>{
 
 });
 
+test('detect a tie', () => {
+    game.board = [
+        [2,1,2,1,2,1,0],
+        [2,1,2,1,2,1,1],
+        [2,1,2,1,2,1,2],
+        [1,2,1,2,1,2,1],
+        [1,2,1,2,1,2,2],
+        [1,2,1,2,1,2,1]
+    ];
+    game.curPlayer = 2;
+    expect(game.makeMove(6,2)).toEqual(-3);
+});
+
 test('checkAcross() works as expected', () => {
     horizontalCases.forEach(example => {
         game.board = example.board;
