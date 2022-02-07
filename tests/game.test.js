@@ -1,5 +1,10 @@
 const {ConnectFour} = require('../src/utils/game');
-const {horizontalCases} = require('./fixtures/board_states');
+const {
+    horizontalCases, 
+    verticalCases, 
+    diagonalCases,
+    tieCases
+} = require('./fixtures/board_states');
 
 let game;
 
@@ -26,5 +31,26 @@ test('checkAcross() works as expected', () => {
     horizontalCases.forEach(example => {
         game.board = example.board;
         expect(game.checkAcross()).toEqual(example.expected);
+    });
+});
+
+test('checkDown() works as expected', () => {
+    verticalCases.forEach(example => {
+        game.board = example.board;
+        expect(game.checkDown()).toEqual(example.expected);
+    });
+});
+
+test('checkDiagonal() works as expected', () => {
+    diagonalCases.forEach(example => {
+        game.board = example.board;
+        expect(game.checkDiagonal()).toEqual(example.expected);
+    });
+});
+
+test('checkTie() works as expected', () => {
+    tieCases.forEach(example => {
+        game.board = example.board;
+        expect(game.checkTie()).toEqual(example.expected);
     });
 });

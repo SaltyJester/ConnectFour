@@ -123,11 +123,11 @@ class ConnectFour{
         for(let row = 0; row < this.board.length; row++){
             for(let col = 0; col < this.board[row].length; col++){
                 if(this.board[row][col] == 0){
-                    return false;
+                    return 0;
                 }
             }
         }
-        return true;
+        return -1;
     }
     
     /*
