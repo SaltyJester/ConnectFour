@@ -28,7 +28,25 @@ board = [
     [0,0,0,0,0,0,0]];
 
 function determineGameState(){
-    //
+    let across = checkAcross();
+    let down = checkDown();
+    let diagonal = checkDiagonal();
+    let tie = checkTie();
+
+    if(across != 0){
+        return across;
+    }
+    else if(down != 0){
+        return down;
+    }
+    else if(diagonal != 0){
+        return diagonal;
+    }
+    else if(tie != 0){
+        return -1
+    }
+
+    return 0;
 }
 
 function checkAcross(){
@@ -76,6 +94,20 @@ function checkDiagonal(){
         }
     }
     return 0;
+}
+
+/*
+Doesn't check for any winners, just checks to see if board is filled
+*/
+function checkTie(){
+    for(let row = 0; row < board.length; row++){
+        for(let col = 0; col < board[row].length; col++){
+            if(board[row][col] == 0){
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 /*
@@ -144,6 +176,7 @@ function clickHandler(event){
         console.log(board);
         console.log(drop);
         console.log('col: ' + col);
+        console.log('Gamestate: ' + determineGameState());
     }
     draw();
     highlight(col);
