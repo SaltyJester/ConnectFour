@@ -18,6 +18,15 @@ for(let i = 0; i < 7; i++){
     drop.push(0);
 }
 
+//for testing, delete later
+board = [
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0]];
+
 function determineGameState(){
     //
 }
@@ -25,7 +34,7 @@ function determineGameState(){
 function checkAcross(){
     for(let row = 0; row < board.length; row++){
         for(let col = board[row].length - 4; col >= 0; col--){
-            result = checkLine(row, col, 0, 1, 4);
+            let result = checkLine(row, col, 0, 1, 4);
             if(result != 0){
                 return result;
             }
@@ -37,7 +46,7 @@ function checkAcross(){
 function checkDown(){
     for(let col = 0; col < board[0].length; col++){
         for(let row = board.length - 4; row >= 0; row--){
-            result = checkLine(row, col, 1, 0, 4);
+            let result = checkLine(row, col, 1, 0, 4);
             if(result != 0){
                 return result;
             }
@@ -48,10 +57,24 @@ function checkDown(){
 
 function checkDiagonal(){
     // Down Right
-    
+    for(let row = 0; row < board.length - 3; row++){
+        for(let col = 0; col < board[row].length - 3; col++){
+            let result = checkLine(row, col, 1, 1, 4);
+            if(result != 0){
+                return result;
+            }
+        }
+    }
 
     // Down Left
-
+    for(let row = 0; row < board.length - 3; row++){
+        for(let col = board[row].length - 1; col >= board[row].length - 4; col--){
+            let result = checkLine(row, col, 1, -1, 4);
+            if(result != 0){
+                return result;
+            }
+        }
+    }
     return 0;
 }
 
