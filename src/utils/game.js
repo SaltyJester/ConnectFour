@@ -41,17 +41,16 @@ class ConnectFour{
         this.drop[col]++;
         this.curPlayer = 3 - curPlayer;
 
-        // DetermineGameState()
-
+        this.gameState = this.determineGameState()
 
         return 0;
     }
 
     determineGameState(){
-        let across = checkAcross();
-        let down = checkDown();
-        let diagonal = checkDiagonal();
-        let tie = checkTie();
+        let across = this.checkAcross();
+        let down = this.checkDown();
+        let diagonal = this.checkDiagonal();
+        let tie = this.checkTie();
     
         if(across != 0){
             return across;
@@ -63,7 +62,7 @@ class ConnectFour{
             return diagonal;
         }
         else if(tie != 0){
-            return -1
+            return tie
         }
     
         return 0;
@@ -127,7 +126,7 @@ class ConnectFour{
                 }
             }
         }
-        return -1;
+        return 3;
     }
     
     /*

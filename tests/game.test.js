@@ -27,6 +27,17 @@ test('players go in the correct order', () => {
     expect(game.makeMove(0, 2)).toEqual(-2);;
 });
 
+test('unable to add another piece to an already full column', () =>{
+    game.makeMove(3, 1);
+    game.makeMove(3, 2);
+    game.makeMove(3, 1);
+    game.makeMove(3, 2);
+    game.makeMove(3, 1);
+    expect(game.makeMove(3, 2)).toEqual(0);
+    expect(game.makeMove(3, 1)).toEqual(-3);
+
+});
+
 test('checkAcross() works as expected', () => {
     horizontalCases.forEach(example => {
         game.board = example.board;

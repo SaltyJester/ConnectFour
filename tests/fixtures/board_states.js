@@ -325,7 +325,7 @@ const tieCases = [
             [1,1,1,1,1,1,1],
             [1,1,1,1,1,1,1]
         ],
-        expected: -1
+        expected: 3
     },
 ];
 
