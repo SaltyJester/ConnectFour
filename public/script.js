@@ -11,6 +11,7 @@ Board Logic, follows [row][col] format
 let board = [];
 let drop = [];
 let curPlayer = 1;
+let moves = [];
 for(let i = 0; i < 6; i++){
     board.push(new Array(7).fill(0));
 }
@@ -168,6 +169,7 @@ function clickHandler(event){
     let col = getMousePosition(event);
 
     if(drop[col] < 6){
+        moves.push([col, curPlayer]);
         board[5 - drop[col]][col] = curPlayer;
         drop[col]++;
         curPlayer = 3 - curPlayer;
@@ -176,6 +178,12 @@ function clickHandler(event){
         console.log(board);
         console.log(drop);
         console.log('col: ' + col);
+        console.log('moves:');
+        let moveString = '';
+        moves.forEach((move) => {
+            moveString+= '['+move[0]+', '+move[1]+'], ';
+        });
+        console.log(moveString);
         console.log('Gamestate: ' + determineGameState());
     }
     draw();
