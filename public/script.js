@@ -1,6 +1,8 @@
+let ws = new WebSocket('ws://localhost:8080')
+
 /*
 TODO:
-- Work on game logic (determine winners)
+- Work on websocket connection with server
 */
 
 /*
@@ -224,4 +226,14 @@ function highlight(col){
     ctx.beginPath();
     ctx.rect(0 + (100 * col), 0, 100, 600);
     ctx.fill();
+}
+
+// websocket code
+ws.onmessage = function(message){
+    console.log(message.data);
+    window.zeData = message.data;
+}
+
+function sendPing(){
+    ws.send('ping');
 }

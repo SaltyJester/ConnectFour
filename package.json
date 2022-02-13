@@ -19,7 +19,8 @@
   "homepage": "https://github.com/SaltyJester/ConnectFour#readme",
   "dependencies": {
     "express": "^4.17.2",
-    "phaser": "^3.55.2"
+    "phaser": "^3.55.2",
+    "ws": "^8.5.0"
   },
   "devDependencies": {
     "jest": "^27.4.7",
