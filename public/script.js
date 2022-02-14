@@ -228,12 +228,34 @@ function highlight(col){
     ctx.fill();
 }
 
-// websocket code
+/**
+ * Websocket Code
+ */
+
+let profile;
+
+// Need to register with the server for player identifcation
+ws.onopen = () => {
+    firstContact();
+
+}
+
+// All ws responses from the server will start here
 ws.onmessage = function(message){
-    console.log(message.data);
-    window.zeData = message.data;
+    console.log(JSON.parse(message.data));
+    // window.zeData = message.data;
+}
+
+function firstContact(){
+    let message = {
+        memo: "firstContact"
+    }
+    ws.send(JSON.stringify(message));
 }
 
 function sendPing(){
-    ws.send('ping');
+    let message = {
+        memo: "ping"
+    }
+    ws.send(JSON.stringify(message));
 }
