@@ -64,10 +64,10 @@ wss.on('connection', (client, req) => {
             role: profile.role
         });
         client.send(JSON.stringify(profile));
-        describeState(client);
+        describeState();
     }
 
-    function describeState(client){
+    function describeState(){
         let message = {
             memo: 'describeState',
             board: game.board,
@@ -75,7 +75,10 @@ wss.on('connection', (client, req) => {
             gameState: game.gameState,
             bothPartiesPresent
         }
-        client.send(JSON.stringify(message));
+        clients.forEach((client) => {
+            client.ws.send(JSON.stringify(message));
+        });
+        // client.send(JSON.stringify(message));
     }
 
     // client.on('d')
