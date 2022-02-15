@@ -237,13 +237,16 @@ let profile;
 // Need to register with the server for player identifcation
 ws.onopen = () => {
     firstContact();
-
 }
 
 // All ws responses from the server will start here
 ws.onmessage = function(message){
-    console.log(JSON.parse(message.data));
-    // window.zeData = message.data;
+    console.log(JSON.parse(message.data)); // for testing, delete later
+    message = JSON.parse(message.data);
+
+    if(message.memo == 'describeRole'){
+        describeRole(message);
+    }
 }
 
 function firstContact(){
@@ -251,6 +254,10 @@ function firstContact(){
         memo: "firstContact"
     }
     ws.send(JSON.stringify(message));
+}
+
+function describeRole(message){
+    profile = message;
 }
 
 function sendPing(){

@@ -3,6 +3,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const ws = require('ws');
+const {ConnectFour} = require('./utils/game');
 
 /**
  * Express.js Code
@@ -22,6 +23,7 @@ console.log('Server has started, listening on port ' + port);
  */
 
 const wss = new ws.WebSocketServer({ port: 8080, clientTracking: true });
+let game = new ConnectFour();
 let nextClientID = 0;
 let clients = [];
 
@@ -37,26 +39,30 @@ wss.on('connection', (client, req) => {
         // console.log(req.headers['sec-websocket-key']);  <--- we could use this later for authenticating users
         
         if(message.memo === 'firstContact'){
-            console.log("First Contact");
-            let profile = new Object;
-            profile.memo = "describeRole";
-            profile.id = nextClientID++;
-            if(clients.length == 0){
-                profile.role = Math.floor(Math.random() * 2) + 1; // random player assignment
-            }
-            else if(clients.length == 1){
-                profile.role = 3 - clients[0].role; // assign remaining available player
-            }
-            else{
-                profile.role = -1 //spectator
-            }
-            clients.push({
-                ws: client,
-                role: profile.role
-            });
-            client.send(JSON.stringify(profile));
+            firstContact(client);
         }
     });
+
+    function firstContact(client){
+        console.log('First Contact');
+        let profile = new Object;
+        profile.memo = 'describeRole';
+        profile.id = nextClientID++;
+        if(clients.length == 0){
+            profile.role = Math.floor(Math.random() * 2) + 1; // random player assignment
+        }
+        else if(clients.length == 1){
+            profile.role = 3 - clients[0].role; // assign remaining available player
+        }
+        else{
+            profile.role = -1 //spectator
+        }
+        clients.push({
+            ws: client,
+            role: profile.role
+        });
+        client.send(JSON.stringify(profile));
+    }
 
     // client.on('d')
 
