@@ -3,6 +3,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const ws = require('ws');
+const wsHandler = require('./utils/ws_handler')
 const {ConnectFour} = require('./utils/game');
 
 /**
@@ -23,10 +24,16 @@ console.log('Server has started, listening on port ' + port);
  */
 
 const wss = new ws.WebSocketServer({ port: 8080, clientTracking: true });
-let game = new ConnectFour();
-let nextClientID = 0;
-let clients = [];
-let bothPartiesPresent = false;
+let details = {
+    game: new ConnectFour(),
+    nextClientID: 0,
+    clients: [],
+    bothPartiesPresent: false
+}
+// let game = new ConnectFour();
+// let nextClientID = 0;
+// let clients = [];
+// let bothPartiesPresent = false;
 
 /**
  * All ws responses from the clients will start here
@@ -40,46 +47,9 @@ wss.on('connection', (client, req) => {
         // console.log(req.headers['sec-websocket-key']);  <--- we could use this later for authenticating users
         
         if(message.memo === 'firstContact'){
-            firstContact(client);
+            wsHandler.firstContact(client, details);
         }
     });
-
-    function firstContact(client){
-        console.log('First Contact');
-        let profile = new Object;
-        profile.memo = 'describeRole';
-        profile.id = nextClientID++;
-        if(clients.length == 0){
-            profile.role = Math.floor(Math.random() * 2) + 1; // random player assignment
-        }
-        else if(clients.length == 1){
-            profile.role = 3 - clients[0].role; // assign remaining available player
-            bothPartiesPresent = true;
-        }
-        else{
-            profile.role = -1 //spectator
-        }
-        clients.push({
-            ws: client,
-            role: profile.role
-        });
-        client.send(JSON.stringify(profile));
-        describeState();
-    }
-
-    function describeState(){
-        let message = {
-            memo: 'describeState',
-            board: game.board,
-            curPlayer: game.curPlayer,
-            gameState: game.gameState,
-            bothPartiesPresent
-        }
-        clients.forEach((client) => {
-            client.ws.send(JSON.stringify(message));
-        });
-        // client.send(JSON.stringify(message));
-    }
 
     // client.on('d')
 
