@@ -26,6 +26,7 @@ const wss = new ws.WebSocketServer({ port: 8080, clientTracking: true });
 let game = new ConnectFour();
 let nextClientID = 0;
 let clients = [];
+let bothPartiesPresent = false;
 
 /**
  * All ws responses from the clients will start here
@@ -53,6 +54,7 @@ wss.on('connection', (client, req) => {
         }
         else if(clients.length == 1){
             profile.role = 3 - clients[0].role; // assign remaining available player
+            bothPartiesPresent = true;
         }
         else{
             profile.role = -1 //spectator
@@ -62,6 +64,18 @@ wss.on('connection', (client, req) => {
             role: profile.role
         });
         client.send(JSON.stringify(profile));
+        describeState(client);
+    }
+
+    function describeState(client){
+        let message = {
+            memo: 'describeState',
+            board: game.board,
+            curPlayer: game.curPlayer,
+            gameState: game.gameState,
+            bothPartiesPresent
+        }
+        client.send(JSON.stringify(message));
     }
 
     // client.on('d')

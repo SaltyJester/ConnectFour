@@ -232,7 +232,7 @@ function highlight(col){
  * Websocket Code
  */
 
-let profile;
+let profile; // holds info about the player
 
 // Need to register with the server for player identifcation
 ws.onopen = () => {

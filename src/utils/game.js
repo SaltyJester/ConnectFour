@@ -13,7 +13,7 @@ class ConnectFour{
         this.board = [];
         this.drop = [];
         this.curPlayer = 1; // need to determine who goes first later one
-        this.gameState = 0;
+        this.gameState = 0; // 0 game in progress, 1 player one wins, 2 player two wins, 3 tie
 
         for(let i = 0; i < 6; i++){
             this.board.push(new Array(7).fill(0));
