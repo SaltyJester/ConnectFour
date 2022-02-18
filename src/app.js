@@ -24,7 +24,7 @@ console.log('Server has started, listening on port ' + port);
  */
 
 const wss = new ws.WebSocketServer({ port: 8080, clientTracking: true });
-let matchData = {
+let sessionData = {
     game: new ConnectFour(),
     nextClientID: 0,
     clients: [],
@@ -47,7 +47,7 @@ wss.on('connection', (client, req) => {
         // console.log(req.headers['sec-websocket-key']);  <--- we could use this later for authenticating users
         
         if(message.memo === 'firstContact'){
-            wsHandler.firstContact(client, matchData);
+            wsHandler.firstContact(client, sessionData);
         }
     });
 
@@ -57,8 +57,3 @@ wss.on('connection', (client, req) => {
 });
 
 // wss.clients <--
-
-module.exports = {
-    app,
-    wss
-}
