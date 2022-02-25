@@ -10,10 +10,12 @@ Board Logic, follows [row][col] format
 0 is empty, 1 is red, 2 is yellow
 "drop[x]" is the next available spot in x column on the board
 */
+let clientID;
+let role;
 let board;
-let curPlayer;
-let gameState;
-let moves = [];
+let curPlayer; // not used at the moment
+let gameState; // not used at the moment
+let moves = []; // for testing purposes
 
 /*
 Canvas Logic
@@ -55,27 +57,28 @@ function draw(){
 
 function clickHandler(event){
     let col = getMousePosition(event);
+    makeMove(col);
 
-    if(drop[col] < 6){
-        moves.push([col, curPlayer]);
-        board[5 - drop[col]][col] = curPlayer;
-        drop[col]++;
-        curPlayer = 3 - curPlayer;
+    // if(drop[col] < 6){
+    //     moves.push([col, curPlayer]);
+    //     board[5 - drop[col]][col] = curPlayer;
+    //     drop[col]++;
+    //     curPlayer = 3 - curPlayer;
 
-        // for testing, delete later
-        console.log(board);
-        console.log(drop);
-        console.log('col: ' + col);
-        console.log('moves:');
-        let moveString = '';
-        moves.forEach((move) => {
-            moveString+= '['+move[0]+', '+move[1]+'], ';
-        });
-        console.log(moveString);
-        console.log('Gamestate: ' + determineGameState());
-    }
-    draw();
-    highlight(col);
+    //     // for testing, delete later
+    //     console.log(board);
+    //     console.log(drop);
+    //     console.log('col: ' + col);
+    //     console.log('moves:');
+    //     let moveString = '';
+    //     moves.forEach((move) => {
+    //         moveString+= '['+move[0]+', '+move[1]+'], ';
+    //     });
+    //     console.log(moveString);
+    //     console.log('Gamestate: ' + determineGameState());
+    // }
+    // draw();
+    // highlight(col);
 }
 
 /*
@@ -140,13 +143,24 @@ ws.onmessage = function(message){
 
 function firstContact(){
     let message = {
-        memo: "firstContact"
+        memo: 'firstContact'
+    }
+    ws.send(JSON.stringify(message));
+}
+function makeMove(col){
+    let message = {
+        memo: 'makeMove',
+        data: {
+            col,
+            role
+        }
     }
     ws.send(JSON.stringify(message));
 }
 
 function roleDescribed(message){
-    profile = message;
+    clientID = message.profile.id;
+    role = message.profile.role;
 }
 
 function stateDescribed(message){

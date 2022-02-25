@@ -1,10 +1,28 @@
-const WebSocket = require('ws');
-const app = require('../src/app');
+class fakeWebSocket{
+    constructor(){
 
-let ws = new WebSocket('ws://localhost:8080');
+    }
+    send(){
+        console.log('fuck me');
+    }
+}
 
-test('board is initalized correctly', () => {
-    let x = 0;
-    expect(x).toEqual(0);
-    
+// const ws = require('ws');
+// jest.mock('ws', () => {
+//     return{
+//         send: jest.fn(() => console.log('fuck'))
+//     }
+// });
+
+beforeAll(() => {
+    // ws.WebSocket.send = jest.fn(() => {
+    //     console.log('iran')
+    // }).mockName('killer');
+});
+
+
+test('test', () => {    
+    let ws = new fakeWebSocket();
+    ws.send();
+    expect(client.send('hi')).toBe(undefined);
 });

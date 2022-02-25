@@ -4,9 +4,8 @@
  * After both roles are filled, all further clients are designated as spectators
  */
 function firstContact(client, sessionData){
-    console.log('First Contact');
     let profile = new Object;
-    profile.memo = 'describeRole';
+    // profile.memo = 'describeRole';
     profile.id = sessionData.nextClientID++;
     if(sessionData.clients.length == 0){
         profile.role = Math.floor(Math.random() * 2) + 1; // random player assignment
@@ -22,7 +21,16 @@ function firstContact(client, sessionData){
         ws: client,
         role: profile.role
     });
-    client.send(JSON.stringify(profile));
+    client.send(JSON.stringify({
+        memo: 'describeRole',
+        profile
+    }));
+    describeState(sessionData);
+}
+
+function moveMade(moveData, sessionData){
+    // need to handle bad moves
+    console.log(sessionData.game.makeMove(moveData.col, moveData.role));
     describeState(sessionData);
 }
 
@@ -45,5 +53,6 @@ function describeState(sessionData){
 
 module.exports = {
     firstContact,
-    describeState
+    describeState,
+    moveMade
 }

@@ -30,10 +30,6 @@ let sessionData = {
     clients: [],
     bothPartiesPresent: false
 }
-// let game = new ConnectFour();
-// let nextClientID = 0;
-// let clients = [];
-// let bothPartiesPresent = false;
 
 /**
  * All ws responses from the clients will start here
@@ -42,12 +38,22 @@ let sessionData = {
  */
 wss.on('connection', (client, req) => {
     client.on('message', (message) => {
-        message = JSON.parse(message);
+        try{
+            message = JSON.parse(message);
+        }catch{
+            console.log('Did not receive correctly formatted JSON message')
+            return;
+        }
 
         // console.log(req.headers['sec-websocket-key']);  <--- we could use this later for authenticating users
         
         if(message.memo === 'firstContact'){
+            console.log('First Contact');
             wsHandler.firstContact(client, sessionData);
+        }
+        else if(message.memo === 'makeMove'){
+            console.log('Move Made');
+            wsHandler.moveMade(message.data, sessionData)
         }
     });
 
