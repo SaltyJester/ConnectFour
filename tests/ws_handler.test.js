@@ -3,7 +3,6 @@ class fakeWebSocket{
 
     }
     send(){
-        console.log('fuck me');
     }
 }
 

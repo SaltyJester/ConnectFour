@@ -28,8 +28,11 @@ function firstContact(client, sessionData){
     describeState(sessionData);
 }
 
+/*
+Need to notify users of bad requests
+Current implementation allows for cheating, since a user can modify JSON data to be any player
+*/
 function moveMade(moveData, sessionData){
-    // need to handle bad moves
     console.log(sessionData.game.makeMove(moveData.col, moveData.role));
     describeState(sessionData);
 }

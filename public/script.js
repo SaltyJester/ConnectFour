@@ -13,8 +13,9 @@ Board Logic, follows [row][col] format
 let clientID;
 let role;
 let board;
-let curPlayer; // not used at the moment
+let curPlayer;
 let gameState; // not used at the moment
+let bothPartiesPresent;
 let moves = []; // for testing purposes
 
 /*
@@ -58,27 +59,6 @@ function draw(){
 function clickHandler(event){
     let col = getMousePosition(event);
     makeMove(col);
-
-    // if(drop[col] < 6){
-    //     moves.push([col, curPlayer]);
-    //     board[5 - drop[col]][col] = curPlayer;
-    //     drop[col]++;
-    //     curPlayer = 3 - curPlayer;
-
-    //     // for testing, delete later
-    //     console.log(board);
-    //     console.log(drop);
-    //     console.log('col: ' + col);
-    //     console.log('moves:');
-    //     let moveString = '';
-    //     moves.forEach((move) => {
-    //         moveString+= '['+move[0]+', '+move[1]+'], ';
-    //     });
-    //     console.log(moveString);
-    //     console.log('Gamestate: ' + determineGameState());
-    // }
-    // draw();
-    // highlight(col);
 }
 
 /*
@@ -166,6 +146,34 @@ function roleDescribed(message){
 function stateDescribed(message){
     board = message.board;
     curPlayer = message.curPlayer;
+    gameState = message.gameState;
+    bothPartiesPresent = message.bothPartiesPresent;
+
+    let turnIndicator = document.getElementById('turn_indicator');
+    if(role == 1 || role == 2){ // for the actual two players
+        if(!bothPartiesPresent){
+            turnIndicator.innerText = 'Waiting for the other player';
+        }
+        else if(gameState == 0){
+            if(curPlayer == role)
+                turnIndicator.innerText = 'Your turn';
+            else
+                turnIndicator.innerText = 'Other player\'s turn'
+        }
+        else if(gameState == 1 || gameState == 2){
+            if(role == gameState)
+                turnIndicator.innerText = 'You won';
+            else
+                turnIndicator.innerText = 'You lost'
+        }
+        else if(gameState == 3){
+            turnIndicator.innerText = 'It\'s a tie'
+        }
+    }
+    else if(role == -1){ // for the spectators
+        turnIndicator.innerText = "Spectating"
+    }
+
     draw();
 }
 
