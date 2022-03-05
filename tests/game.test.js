@@ -90,8 +90,9 @@ test('checkDiagonal() works as expected', () => {
 });
 
 test('checkTie() works as expected', () => {
-    boardStates.tieCases.forEach(example => {
-        game.board = example.board;
-        expect(game.checkTie()).toEqual(example.expected);
+    movesets.tie.moves.forEach((move) => {
+        game.makeMove(move[0], move[1]);
     });
+    expect(game.turnCount).toEqual(42); // only 42 turns possible
+    expect(game.checkTie()).toEqual(3); // 3 represents a tie, 0 means no tie detected
 });

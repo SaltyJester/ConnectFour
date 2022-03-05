@@ -12,6 +12,7 @@ class ConnectFour{
     constructor(){
         this.board = [];
         this.drop = [];
+        this.turnCount = 0;
         this.curPlayer = 1; // need to determine who goes first later one
         this.gameState = 0; // 0 game in progress, 1 player one wins, 2 player two wins, 3 tie
 
@@ -39,6 +40,7 @@ class ConnectFour{
 
         this.board[5 - this.drop[col]][col] = curPlayer;
         this.drop[col]++;
+        this.turnCount++;
         this.curPlayer = 3 - curPlayer;
 
         this.gameState = this.determineGameState()
@@ -119,14 +121,12 @@ class ConnectFour{
     Doesn't check for any winners, just checks to see if board is filled
     */
     checkTie(){
-        for(let row = 0; row < this.board.length; row++){
-            for(let col = 0; col < this.board[row].length; col++){
-                if(this.board[row][col] == 0){
-                    return 0;
-                }
-            }
+        if(this.turnCount >= 42){
+            return 3;
         }
-        return 3;
+        else{
+            return 0;
+        }
     }
     
     /*
