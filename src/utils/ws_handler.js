@@ -7,20 +7,25 @@ function firstContact(client, sessionData){
     let profile = new Object;
     // profile.memo = 'describeRole';
     profile.id = sessionData.nextClientID++;
-    if(sessionData.clients.length == 0){
+    if(Object.keys(sessionData.clients).length == 0){
         profile.role = Math.floor(Math.random() * 2) + 1; // random player assignment
     }
-    else if(sessionData.clients.length == 1){
+    else if(Object.keys(sessionData.clients).length == 1){
         profile.role = 3 - sessionData.clients[0].role; // assign remaining available player
         sessionData.bothPartiesPresent = true;
     }
     else{
         profile.role = -1 //spectator
     }
-    sessionData.clients.push({
+    sessionData.clients[profile.id] = {
         ws: client,
         role: profile.role
-    });
+    }
+
+    // sessionData.clients.push({
+    //     ws: client,
+    //     role: profile.role
+    // });
     client.send(JSON.stringify({
         memo: 'describeRole',
         profile
@@ -48,9 +53,16 @@ function describeState(sessionData){
         gameState: sessionData.game.gameState,
         bothPartiesPresent: sessionData.bothPartiesPresent
     }
-    sessionData.clients.forEach((client) => {
-        client.ws.send(JSON.stringify(message));
-    });
+
+    for(const [key, value] of Object.entries(sessionData.clients)){
+        value.ws.send(JSON.stringify(message));
+    }
+
+    // sessionData.clients.forEach((client) => {
+    //     client.ws.send(JSON.stringify(message));
+    // });
+
+
     // client.send(JSON.stringify(message));
 }
 

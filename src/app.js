@@ -27,7 +27,7 @@ const wss = new ws.WebSocketServer({ port: 8080, clientTracking: true });
 let sessionData = {
     game: new ConnectFour(),
     nextClientID: 0,
-    clients: [],
+    clients: {},
     bothPartiesPresent: false
 }
 
