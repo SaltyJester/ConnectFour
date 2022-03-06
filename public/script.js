@@ -16,6 +16,7 @@ let board;
 let curPlayer;
 let gameState; // not used at the moment
 let bothPartiesPresent;
+let token;
 let moves = []; // for testing purposes
 
 /*
@@ -132,7 +133,7 @@ function makeMove(col){
         memo: 'makeMove',
         data: {
             col,
-            role
+            token
         }
     }
     ws.send(JSON.stringify(message));
@@ -141,6 +142,7 @@ function makeMove(col){
 function roleDescribed(message){
     clientID = message.profile.id;
     role = message.profile.role;
+    token = message.token;
 }
 
 function stateDescribed(message){

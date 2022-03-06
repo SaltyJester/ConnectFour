@@ -1,11 +1,17 @@
+const jwt = require('jsonwebtoken');
+
 /**
  * When clients intially connect to the server, they need to be assigned a player role
  * Player role (one or two) is selected at random
  * After both roles are filled, all further clients are designated as spectators
  */
 function firstContact(client, sessionData){
+    // test code
+    // let token = jwt.sign({name: 'david'}, process.env.TOKEN_SECRET);
+    // console.log(token);
+    // end of test code
+
     let profile = new Object;
-    // profile.memo = 'describeRole';
     profile.id = sessionData.nextClientID++;
     if(Object.keys(sessionData.clients).length == 0){
         profile.role = Math.floor(Math.random() * 2) + 1; // random player assignment
@@ -17,9 +23,12 @@ function firstContact(client, sessionData){
     else{
         profile.role = -1 //spectator
     }
+
+    let token = jwt.sign({ id: profile.id, role: profile.role }, process.env.TOKEN_SECRET);
+
     sessionData.clients[profile.id] = {
         ws: client,
-        role: profile.role
+        role: profile.role,
     }
 
     // sessionData.clients.push({
@@ -28,18 +37,26 @@ function firstContact(client, sessionData){
     // });
     client.send(JSON.stringify({
         memo: 'describeRole',
-        profile
+        profile,
+        token
     }));
     describeState(sessionData);
 }
 
 /*
 Need to notify users of bad requests
-Current implementation allows for cheating, since a user can modify JSON data to be any player
+Users are authenticated via JWT
 */
 function moveMade(moveData, sessionData){
-    console.log(sessionData.game.makeMove(moveData.col, moveData.role));
-    describeState(sessionData);
+    try{
+        let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
+
+        sessionData.game.makeMove(moveData.col, decoded.role);
+        describeState(sessionData);
+    }
+    catch(e){
+        console.log('JWT is invalid');
+    }
 }
 
 /**
@@ -57,13 +74,6 @@ function describeState(sessionData){
     for(const [key, value] of Object.entries(sessionData.clients)){
         value.ws.send(JSON.stringify(message));
     }
-
-    // sessionData.clients.forEach((client) => {
-    //     client.ws.send(JSON.stringify(message));
-    // });
-
-
-    // client.send(JSON.stringify(message));
 }
 
 module.exports = {
