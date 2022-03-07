@@ -6,11 +6,6 @@ const jwt = require('jsonwebtoken');
  * After both roles are filled, all further clients are designated as spectators
  */
 function firstContact(client, sessionData){
-    // test code
-    // let token = jwt.sign({name: 'david'}, process.env.TOKEN_SECRET);
-    // console.log(token);
-    // end of test code
-
     let profile = new Object;
     profile.id = sessionData.nextClientID++;
     if(Object.keys(sessionData.clients).length == 0){
@@ -24,6 +19,7 @@ function firstContact(client, sessionData){
         profile.role = -1 //spectator
     }
 
+    // JWT prevents players from making moves on other players behalf
     let token = jwt.sign({ id: profile.id, role: profile.role }, process.env.TOKEN_SECRET);
 
     sessionData.clients[profile.id] = {
@@ -31,10 +27,6 @@ function firstContact(client, sessionData){
         role: profile.role,
     }
 
-    // sessionData.clients.push({
-    //     ws: client,
-    //     role: profile.role
-    // });
     client.send(JSON.stringify({
         memo: 'describeRole',
         profile,
@@ -49,10 +41,11 @@ Users are authenticated via JWT
 */
 function moveMade(moveData, sessionData){
     try{
-        let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
-
-        sessionData.game.makeMove(moveData.col, decoded.role);
-        describeState(sessionData);
+        if(sessionData.bothPartiesPresent){
+            let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
+            sessionData.game.makeMove(moveData.col, decoded.role);
+            describeState(sessionData);
+        }
     }
     catch(e){
         console.log('JWT is invalid');

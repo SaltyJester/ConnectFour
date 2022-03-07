@@ -1,27 +1,31 @@
-class fakeWebSocket{
-    constructor(){
+const {ConnectFour} = require('../src/utils/game');
+const wsHandler = require('../src/utils/ws_handler')
 
+class MockWebSocket{
+    constructor(){
+        this.log = [];
     }
-    send(){
+    send(data){
+        this.log.push(data);
     }
 }
 
-// const ws = require('ws');
-// jest.mock('ws', () => {
-//     return{
-//         send: jest.fn(() => console.log('fuck'))
-//     }
-// });
+let sessionData;
+let client;
 
-beforeAll(() => {
-    // ws.WebSocket.send = jest.fn(() => {
-    //     console.log('iran')
-    // }).mockName('killer');
+beforeEach(() => {
+    sessionData = {
+        game: new ConnectFour(),
+        nextClientID: 0,
+        clients: {},
+        bothPartiesPresent: false
+    }
+
+    client = new MockWebSocket();
 });
 
 
-test('test', () => {    
-    let ws = new fakeWebSocket();
-    ws.send();
-    // expect(client.send('hi')).toBe(undefined);
+test('firstContact', () => {    
+    wsHandler.firstContact(client, sessionData);
+    // console.log(client.log);
 });
