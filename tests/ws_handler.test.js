@@ -6,7 +6,7 @@ class MockWebSocket{
         this.log = [];
     }
     send(data){
-        this.log.push(data);
+        this.log.push(JSON.parse(data));
     }
 }
 
@@ -24,8 +24,33 @@ beforeEach(() => {
     client = new MockWebSocket();
 });
 
-
-test('firstContact', () => {    
+test('firstContact() describes role correctly for first client', () => {
     wsHandler.firstContact(client, sessionData);
-    // console.log(client.log);
+    let message = (client.log[0]);
+
+    // first message received should have a memo of 'describeRole'
+    expect(message.memo).toEqual('describeRole');
+    // client ID for first person should be 0
+    expect(message.profile.id).toEqual(0);
+    // role for first person should be 1 or 2
+    expect(message.profile.role).toBeWithinRange(1,2);
+});
+
+expect.extend({
+    toBeWithinRange(num, min, max){
+        if(num >= min && num <= max){
+            return {
+                message:() => 
+                    `expected ${num} not to be within range ${min} - ${max}`,
+                pass: true
+            };
+        }
+        else{
+            return {
+                message:() => 
+                    `expected ${num} to be within range ${min} - ${max}`,
+                pass: false
+            };
+        }
+    }
 });
