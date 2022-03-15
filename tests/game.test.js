@@ -24,9 +24,9 @@ test('board is initalized correctly', () => {
 
 test('players go in the correct order', () => {
     expect(game.makeMove(0, 1)).toEqual(0);;
-    expect(game.makeMove(0, 1)).toEqual(-2);;
+    expect(game.makeMove(0, 1)).toEqual('Incorrect player');;
     expect(game.makeMove(0, 2)).toEqual(0);;
-    expect(game.makeMove(0, 2)).toEqual(-2);;
+    expect(game.makeMove(0, 2)).toEqual('Incorrect player');;
 });
 
 test('unable to add another piece to an already full column', () =>{
@@ -36,7 +36,7 @@ test('unable to add another piece to an already full column', () =>{
     game.makeMove(3, 2);
     game.makeMove(3, 1);
     expect(game.makeMove(3, 2)).toEqual(0);
-    expect(game.makeMove(3, 1)).toEqual(-3);
+    expect(game.makeMove(3, 1)).toEqual('Bad move');
 
 });
 

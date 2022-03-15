@@ -39,16 +39,23 @@ function firstContact(client, sessionData){
 Need to notify users of bad requests
 Users are authenticated via JWT
 */
-function moveMade(moveData, sessionData){
+function moveMade(moveData, client, sessionData){
     try{
         if(sessionData.bothPartiesPresent){
             let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
-            sessionData.game.makeMove(moveData.col, decoded.role);
-            describeState(sessionData);
+            let status = sessionData.game.makeMove(moveData.col, decoded.role);
+            if(status == 0)
+                describeState(sessionData);
+            else
+                gotBadRequest(status, client);
+        }
+        else{
+            gotBadRequest('Both parties not present', client);
         }
     }
     catch(e){
-        console.log('JWT is invalid');
+        // console.log('JWT is invalid');
+        gotBadRequest('JWT is invalid', client);
     }
 }
 
@@ -67,6 +74,14 @@ function describeState(sessionData){
     for(const [key, value] of Object.entries(sessionData.clients)){
         value.ws.send(JSON.stringify(message));
     }
+}
+
+function gotBadRequest(error, client){
+    let message = {
+        memo: 'badRequest',
+        error
+    }
+    client.send(JSON.stringify(message));
 }
 
 module.exports = {

@@ -29,13 +29,13 @@ class ConnectFour{
     */
     makeMove(col, curPlayer){
         if(this.gameState !== 0){
-            return -1 // game has already ended
+            return 'Game has already ended' // game has already ended
         }
         if(curPlayer !== this.curPlayer){
-            return -2; // incorrect player
+            return 'Incorrect player'; // incorrect player
         }
         if(this.drop[col] > 5){
-            return -3; // bad move
+            return 'Bad move'; // bad move
         }
 
         this.board[5 - this.drop[col]][col] = curPlayer;

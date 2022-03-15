@@ -1,5 +1,6 @@
 const {ConnectFour} = require('../src/utils/game');
 const wsHandler = require('../src/utils/ws_handler')
+const jwt = require('jsonwebtoken');
 
 class MockWebSocket{
     constructor(){
@@ -28,6 +29,7 @@ beforeEach(() => {
     client_3 = new MockWebSocket();
 });
 
+// TODO: i need to break this test down into multiple tests
 test('firstContact() describes role correctly', () => {
     // client_1
     wsHandler.firstContact(client_1, sessionData);
@@ -65,6 +67,79 @@ test('firstContact() describes role correctly', () => {
     let describeRole_3 = client_3.log[0];
     // client_3 should have gotten role of spectator, '-1'
     expect(describeRole_3.profile.role).toEqual(-1);
+});
+
+test('Players cannot make a move when both parties are not present', () => {
+    wsHandler.firstContact(client_1, sessionData);
+    client_1_token = client_1.log[0].token;
+
+    let moveData = {
+        memo: 'makeMove',
+        data: {
+            col: 1,
+            token: client_1_token
+        }
+    };
+    wsHandler.moveMade(moveData, client_1, sessionData);
+    expect(client_1.log[2].memo).toEqual('badRequest');
+    expect(client_1.log[2].error).toEqual('Both parties not present');
+});
+
+test('Players can make a move when both parties are present', () => {
+    wsHandler.firstContact(client_1, sessionData);
+    wsHandler.firstContact(client_2, sessionData);
+
+    console.log(client_1.log[0]);
+
+    if(client_1.log[0].profile.role == 1){
+        client_1_token = client_1.log[0].token;
+
+        let moveData = {
+            memo: 'makeMove',
+            data: {
+                col: 1,
+                token: client_1_token
+            }
+        };
+        wsHandler.moveMade(moveData, client_1, sessionData);
+        console.log(client_1.log)
+        expect(client_1.log[client_1.log.length - 1].memo).toEqual('describeState');
+        // console.log(client_1.log)
+    }
+    else{
+        client_2_token = client_2.log[0].token;
+
+        let moveData = {
+            memo: 'makeMove',
+            data: {
+                col: 1,
+                token: client_2_token
+            }
+        };
+        wsHandler.moveMade(moveData, client_2, sessionData);
+        console.log(client_2.log)
+        expect(client_2.log[client_2.log.length - 1].memo).toEqual('describeState');
+    }
+});
+
+test('Players with invalid JWT will get a badRequest memo', () => {
+    wsHandler.firstContact(client_1, sessionData);
+    wsHandler.firstContact(client_2, sessionData);
+    let token = jwt.sign({
+        id: 0,
+        role: 1,
+    }, 'fakeKey');
+    
+    let moveData = {
+        memo: 'makeMove',
+        data: {
+            col: 1,
+            token
+        }
+    };
+
+    wsHandler.moveMade(moveData, client_1, sessionData);
+    expect(client_1.log[client_1.log.length - 1].memo).toEqual('badRequest');
 });
 
 expect.extend({

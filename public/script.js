@@ -120,6 +120,9 @@ ws.onmessage = function(message){
     else if(message.memo == 'describeState'){
         stateDescribed(message);
     }
+    else if(message.memo == 'badRequest'){
+        didBadRequest(message);
+    }
 }
 
 function firstContact(){
@@ -177,6 +180,10 @@ function stateDescribed(message){
     }
 
     draw();
+}
+
+function didBadRequest(message){
+    console.log('Do something with error message')
 }
 
 function sendPing(){
