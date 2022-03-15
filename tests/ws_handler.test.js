@@ -74,11 +74,8 @@ test('Players cannot make a move when both parties are not present', () => {
     client_1_token = client_1.log[0].token;
 
     let moveData = {
-        memo: 'makeMove',
-        data: {
-            col: 1,
-            token: client_1_token
-        }
+        col: 1,
+        token: client_1_token
     };
     wsHandler.moveMade(moveData, client_1, sessionData);
     expect(client_1.log[2].memo).toEqual('badRequest');
@@ -89,38 +86,29 @@ test('Players can make a move when both parties are present', () => {
     wsHandler.firstContact(client_1, sessionData);
     wsHandler.firstContact(client_2, sessionData);
 
-    console.log(client_1.log[0]);
+    // client_1_token = client_1.log[0].token;
+    // console.log(jwt.verify(client_1_token, process.env.TOKEN_SECRET));
+
+    let moveData = {
+        col: 1,
+        token: undefined
+    };
 
     if(client_1.log[0].profile.role == 1){
-        client_1_token = client_1.log[0].token;
-
-        let moveData = {
-            memo: 'makeMove',
-            data: {
-                col: 1,
-                token: client_1_token
-            }
-        };
+        moveData.token = client_1.log[0].token;
         wsHandler.moveMade(moveData, client_1, sessionData);
-        console.log(client_1.log)
         expect(client_1.log[client_1.log.length - 1].memo).toEqual('describeState');
-        // console.log(client_1.log)
     }
     else{
-        client_2_token = client_2.log[0].token;
-
-        let moveData = {
-            memo: 'makeMove',
-            data: {
-                col: 1,
-                token: client_2_token
-            }
-        };
+        moveData.token = client_2.log[0].token;
         wsHandler.moveMade(moveData, client_2, sessionData);
-        console.log(client_2.log)
         expect(client_2.log[client_2.log.length - 1].memo).toEqual('describeState');
     }
 });
+
+// test to make sure players make moves in correct order
+
+// test to make sure players can't make moves when game has ended
 
 test('Players with invalid JWT will get a badRequest memo', () => {
     wsHandler.firstContact(client_1, sessionData);
