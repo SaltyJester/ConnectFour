@@ -16,14 +16,20 @@ app.get('/', function(req, res){
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(port);
+const server = app.listen(port);
 console.log('Server has started, listening on port ' + port);
 
 /**
  * Websocket Code
  */
 
-const wss = new ws.WebSocketServer({ port: 8080, clientTracking: true });
+const wss = new ws.WebSocketServer({ noServer: true, clientTracking: true });
+server.on('upgrade', (request, socket, head) => {
+    wss.handleUpgrade(request, socket, head, (webSocket) => {
+        wss.emit('connection', webSocket, request);
+    });
+});
+
 let sessionData = {
     game: new ConnectFour(),
     nextClientID: 0,
