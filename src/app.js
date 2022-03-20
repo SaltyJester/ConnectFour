@@ -13,7 +13,12 @@ const {ConnectFour} = require('./utils/game');
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.get('/', function(req, res){
-    res.sendFile(path.join(__dirname, '../public/game_page.html'));
+    res.sendFile(path.join(__dirname, '../public/landing_page.html'));
+});
+
+app.post('/create_game', function(req, res){
+    res.status(500);
+    res.send('HI');
 });
 
 const server = app.listen(port);
