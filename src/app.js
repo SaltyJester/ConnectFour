@@ -5,6 +5,7 @@ const port = 3000;
 const ws = require('ws');
 const wsHandler = require('./utils/ws_handler')
 const {ConnectFour} = require('./utils/game');
+const {SessionManager} = require('./utils/session_manager');
 
 /**
  * Express.js Code
@@ -17,12 +18,27 @@ app.get('/', function(req, res){
 });
 
 app.post('/create_game', function(req, res){
-    res.status(500);
-    res.send('HI');
+    let sessionID = sessionManager.createGame();
+    res.status(201);
+    res.send({sessionID});
 });
+
+app.get('/join/:id', (req, res) => {
+    if(sessionManager.sessions[req.params.id]){
+        return res.status(200).sendFile(path.join(__dirname, '../public/game_page.html'));
+    }
+    res.status(404).send();
+});
+
+//need to make a request for those who already have a URL link to a game
 
 const server = app.listen(port);
 console.log('Server has started, listening on port ' + port);
+
+/**
+ * Code for managing multiple game sessions
+ */
+let sessionManager = new SessionManager();
 
 /**
  * Websocket Code
@@ -74,3 +90,10 @@ wss.on('connection', (client, req) => {
 });
 
 // wss.clients <--
+
+//TEST CODE START
+// let test = new SessionManager();
+// let id = test.createGame();
+// id = test.createGame();
+// console.log(id)
+//TEST CODE END
