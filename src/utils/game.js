@@ -137,7 +137,7 @@ class ConnectFour{
     */
     checkLine(sr, sc, dr, dc, len){
         let val = this.board[sr][sc];
-        for(let i = 0; i < len; i++){
+        for(let i = 1; i < len; i++){
             if(this.board[sr + dr*i][sc + dc*i] != val){
                 return 0;
             }
