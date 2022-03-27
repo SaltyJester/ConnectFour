@@ -1,4 +1,5 @@
 let ws = new WebSocket(window.location.href.replace("http://", "ws://"));
+let url = window.location.href;
 
 /*
 TODO:
@@ -10,6 +11,7 @@ Board Logic, follows [row][col] format
 0 is empty, 1 is red, 2 is yellow
 "drop[x]" is the next available spot in x column on the board
 */
+let sessionID = parseInt(url.substring(url.lastIndexOf('/') + 1));
 let clientID;
 let role;
 let board;
@@ -127,7 +129,8 @@ ws.onmessage = function(message){
 
 function firstContact(){
     let message = {
-        memo: 'firstContact'
+        memo: 'firstContact',
+        sessionID
     }
     ws.send(JSON.stringify(message));
 }

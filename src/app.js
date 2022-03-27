@@ -30,6 +30,10 @@ app.get('/join/:id', (req, res) => {
     res.status(404).send();
 });
 
+app.get('/list_sessions', (req, res) => {
+    res.status(200).send(sessionManager.sessions);
+});
+
 //need to make a request for those who already have a URL link to a game
 
 const server = app.listen(port);
@@ -76,7 +80,7 @@ wss.on('connection', (client, req) => {
         
         if(message.memo === 'firstContact'){
             console.log('First Contact');
-            wsHandler.firstContact(client, sessionData);
+            wsHandler.firstContact(message.sessionID, client, sessionManager);
         }
         else if(message.memo === 'makeMove'){
             console.log('Move Made');

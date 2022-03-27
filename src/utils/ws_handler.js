@@ -5,7 +5,14 @@ const jwt = require('jsonwebtoken');
  * Player role (one or two) is selected at random
  * After both roles are filled, all further clients are designated as spectators
  */
-function firstContact(client, sessionData){
+function firstContact(sessionID ,client, sessionManager){
+    if(!sessionManager.sessions[sessionID]){
+        console.log("Session ID does not exist");
+        return; // need to return an error code to client
+    }
+
+    let sessionData = sessionManager.sessions[sessionID];
+
     let profile = new Object;
     profile.id = sessionData.nextClientID++;
     if(Object.keys(sessionData.clients).length == 0){
