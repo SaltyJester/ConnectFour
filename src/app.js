@@ -84,7 +84,7 @@ wss.on('connection', (client, req) => {
         }
         else if(message.memo === 'makeMove'){
             console.log('Move Made');
-            wsHandler.moveMade(message.data, client, sessionData)
+            wsHandler.moveMade(message.data, client, sessionManager)
         }
     });
 

@@ -27,7 +27,11 @@ function firstContact(sessionID ,client, sessionManager){
     }
 
     // JWT prevents players from making moves on other players behalf
-    let token = jwt.sign({ id: profile.id, role: profile.role }, process.env.TOKEN_SECRET);
+    let token = jwt.sign({ 
+        id: profile.id, 
+        role: profile.role,
+        sessionID
+    }, process.env.TOKEN_SECRET);
 
     sessionData.clients[profile.id] = {
         ws: client,
@@ -46,10 +50,16 @@ function firstContact(sessionID ,client, sessionManager){
 Need to notify users of bad requests
 Users are authenticated via JWT
 */
-function moveMade(moveData, client, sessionData){
+function moveMade(moveData, client, sessionManager){
     try{
+        let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
+        if(!sessionManager.sessions[decoded.sessionID]){
+            console.log("Session ID does not exist");
+            return; // need to return an error code to client
+        }
+        let sessionData = sessionManager.sessions[decoded.sessionID]
         if(sessionData.bothPartiesPresent){
-            let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
+            // let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
             let status = sessionData.game.makeMove(moveData.col, decoded.role);
             if(status == 0)
                 describeState(sessionData);
