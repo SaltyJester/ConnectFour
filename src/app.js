@@ -55,12 +55,12 @@ server.on('upgrade', (request, socket, head) => {
     });
 });
 
-let sessionData = {
-    game: new ConnectFour(),
-    nextClientID: 0,
-    clients: {},
-    bothPartiesPresent: false
-}
+// let sessionData = {
+//     game: new ConnectFour(),
+//     nextClientID: 0,
+//     clients: {},
+//     bothPartiesPresent: false
+// }
 
 /**
  * All ws responses from the clients will start here

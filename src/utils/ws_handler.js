@@ -6,11 +6,6 @@ const jwt = require('jsonwebtoken');
  * After both roles are filled, all further clients are designated as spectators
  */
 function firstContact(sessionID ,client, sessionManager){
-    if(!sessionManager.sessions[sessionID]){
-        console.log("Session ID does not exist");
-        return; // need to return an error code to client
-    }
-
     let sessionData = sessionManager.sessions[sessionID];
 
     let profile = new Object;
@@ -53,13 +48,8 @@ Users are authenticated via JWT
 function moveMade(moveData, client, sessionManager){
     try{
         let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
-        if(!sessionManager.sessions[decoded.sessionID]){
-            console.log("Session ID does not exist");
-            return; // need to return an error code to client
-        }
         let sessionData = sessionManager.sessions[decoded.sessionID]
         if(sessionData.bothPartiesPresent){
-            // let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
             let status = sessionData.game.makeMove(moveData.col, decoded.role);
             if(status == 0)
                 describeState(sessionData);
