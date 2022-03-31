@@ -6,6 +6,7 @@ const ws = require('ws');
 const wsHandler = require('./utils/ws_handler')
 const {ConnectFour} = require('./utils/game');
 const {SessionManager} = require('./utils/session_manager');
+const jwt = require('jsonwebtoken');
 
 /**
  * Express.js Code
@@ -55,19 +56,12 @@ server.on('upgrade', (request, socket, head) => {
     });
 });
 
-// let sessionData = {
-//     game: new ConnectFour(),
-//     nextClientID: 0,
-//     clients: {},
-//     bothPartiesPresent: false
-// }
-
 /**
  * All ws responses from the clients will start here
  * Eventually, we'll have to verify each user is who they say they are
  * cause currently people could just change their ID in the JSON
  */
-wss.on('connection', (client, req) => {
+wss.on('connection', (client) => {
     client.on('message', (message) => {
         try{
             message = JSON.parse(message);
@@ -75,29 +69,23 @@ wss.on('connection', (client, req) => {
             console.log('Did not receive correctly formatted JSON message')
             return;
         }
-
-        // console.log(req.headers['sec-websocket-key']);  <--- we could use this later for authenticating users
         
         if(message.memo === 'firstContact'){
-            console.log('First Contact');
+            console.log('A user is joining session ' + message.sessionID);
             wsHandler.firstContact(message.sessionID, client, sessionManager);
         }
         else if(message.memo === 'makeMove'){
-            console.log('Move Made');
-            wsHandler.moveMade(message.data, client, sessionManager)
+            try{
+                let decoded = jwt.verify(message.data.token, process.env.TOKEN_SECRET);
+                console.log('Make move request from session: ' + decoded.sessionID + ', player: ' + decoded.role);
+                wsHandler.moveMade(message.data, client, sessionManager)
+            }
+            catch(e){
+                console.log('Error occured for makeMove');
+            }
+        }
+        else if(message.memo === 'throwTowel'){
+            console.log('someone is a quiter');
         }
     });
-
-    // client.on('d')
-
-    // console.log(JSON.stringify(wss.clients));
 });
-
-// wss.clients <--
-
-//TEST CODE START
-// let test = new SessionManager();
-// let id = test.createGame();
-// id = test.createGame();
-// console.log(id)
-//TEST CODE END

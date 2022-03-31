@@ -70,17 +70,28 @@ function moveMade(moveData, client, sessionManager){
  * Sends up-to-date game data back to the client
  */
 function describeState(sessionData){
+    let rematchOption = (sessionData.game.gameState != 0);
+
     let message = {
         memo: 'describeState',
         board: sessionData.game.board,
         curPlayer: sessionData.game.curPlayer,
         gameState: sessionData.game.gameState,
-        bothPartiesPresent: sessionData.bothPartiesPresent
+        bothPartiesPresent: sessionData.bothPartiesPresent,
+        rematchOption
     }
 
     for(const [key, value] of Object.entries(sessionData.clients)){
         value.ws.send(JSON.stringify(message));
     }
+}
+
+function rematch(sessionManager){
+
+}
+
+function towelThrown(sessionManager){
+
 }
 
 function gotBadRequest(error, client){

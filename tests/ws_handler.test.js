@@ -14,6 +14,7 @@ class MockWebSocket{
 
 let sessionManager;
 let game_1;
+let game_2
 let client_1;
 let client_2;
 let client_3;
@@ -21,6 +22,7 @@ let client_3;
 beforeEach(() => {
     sessionManager = new SessionManager();
     game_1 = sessionManager.createGame();
+    game_2 = sessionManager.createGame();
 
     client_1 = new MockWebSocket();
     client_2 = new MockWebSocket();
