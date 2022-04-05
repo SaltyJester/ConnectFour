@@ -134,6 +134,7 @@ function firstContact(){
     }
     ws.send(JSON.stringify(message));
 }
+
 function makeMove(col){
     let message = {
         memo: 'makeMove',
@@ -143,6 +144,13 @@ function makeMove(col){
         }
     }
     ws.send(JSON.stringify(message));
+}
+
+function requestRematch(){
+    let message = {
+        memo: 'requestRematch',
+        token
+    }
 }
 
 function roleDescribed(message){

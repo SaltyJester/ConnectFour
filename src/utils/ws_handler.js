@@ -66,6 +66,19 @@ function moveMade(moveData, client, sessionManager){
     }
 }
 
+function rematchRequested(token, sessionManager){
+    try{
+        // let decoded 
+    }
+    catch(e){
+
+    }
+}
+
+function towelThrown(sessionManager){
+
+}
+
 /**
  * Sends up-to-date game data back to the client
  */
@@ -84,14 +97,6 @@ function describeState(sessionData){
     for(const [key, value] of Object.entries(sessionData.clients)){
         value.ws.send(JSON.stringify(message));
     }
-}
-
-function rematch(sessionManager){
-
-}
-
-function towelThrown(sessionManager){
-
 }
 
 function gotBadRequest(error, client){

@@ -60,6 +60,8 @@ server.on('upgrade', (request, socket, head) => {
  * All ws responses from the clients will start here
  * Eventually, we'll have to verify each user is who they say they are
  * cause currently people could just change their ID in the JSON
+ * 
+ * TO DO: each client should be sending a token for every message so we only process valid requests
  */
 wss.on('connection', (client) => {
     client.on('message', (message) => {
@@ -83,6 +85,10 @@ wss.on('connection', (client) => {
             catch(e){
                 console.log('Error occured for makeMove');
             }
+        }
+        else if(message.memo === 'requestRematch'){
+            console.log('Rematch requested')
+            wsHandler.rematchRequested(message.token, sessionManager);
         }
         else if(message.memo === 'throwTowel'){
             console.log('someone is a quiter');
