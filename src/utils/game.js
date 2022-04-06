@@ -1,6 +1,6 @@
 /*
 TODO:
-
+- Game states should be converted to strings, will make code easier to understand
 */
 
 /*
@@ -16,10 +16,10 @@ class ConnectFour{
         this.curPlayer = 1; // need to determine who goes first later one
         this.gameState = 0; // 0 game in progress, 1 player one wins, 2 player two wins, 3 tie
 
-        for(let i = 0; i < 6; i++){
+        for(let row = 0; row < 6; row++){
             this.board.push(new Array(7).fill(0));
         }
-        for(let i = 0; i < 7; i++){
+        for(let col = 0; col < 7; col++){
             this.drop.push(0);
         }
     }
@@ -28,13 +28,14 @@ class ConnectFour{
     Each return should provide a status code
     */
     makeMove(col, curPlayer){
+        let capacity = 5; // each column can only take 6 pieces
         if(this.gameState !== 0){
-            return 'Game has already ended' // game has already ended
+            return 'Game has already ended'; // game has already ended
         }
         if(curPlayer !== this.curPlayer){
             return 'Incorrect player'; // incorrect player
         }
-        if(this.drop[col] > 5){
+        if(this.drop[col] > capacity){
             return 'Bad move'; // bad move
         }
 
@@ -43,7 +44,7 @@ class ConnectFour{
         this.turnCount++;
         this.curPlayer = 3 - curPlayer;
 
-        this.gameState = this.determineGameState()
+        this.gameState = this.determineGameState();
 
         return 0;
     }
@@ -64,7 +65,7 @@ class ConnectFour{
             return diagonal;
         }
         else if(tie != 0){
-            return tie
+            return tie;
         }
     
         return 0;
@@ -125,7 +126,7 @@ class ConnectFour{
             return 3;
         }
         else{
-            return 0;
+            return 0; // game is still ongoing
         }
     }
     

@@ -2,8 +2,10 @@ const jwt = require('jsonwebtoken');
 
 /**
  * When clients intially connect to the server, they need to be assigned a player role
- * Player role (one or two) is selected at random
- * After both roles are filled, all further clients are designated as spectators
+ * Player roles can be 1, 2, or -1 which correspond to Player 1, Player 2, Spectator respectively
+ * First client to join is assigned 1 or 2 randomly,
+ * next client to join will get the opposite role to the first client,
+ * all clients thereafter are designated as spectators.
  */
 function firstContact(sessionID ,client, sessionManager){
     let sessionData = sessionManager.sessions[sessionID];
@@ -18,7 +20,7 @@ function firstContact(sessionID ,client, sessionManager){
         sessionData.bothPartiesPresent = true;
     }
     else{
-        profile.role = -1 //spectator
+        profile.role = -1; //spectator
     }
 
     // JWT prevents players from making moves on other players behalf

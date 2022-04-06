@@ -3,7 +3,6 @@ let url = window.location.href;
 
 /*
 TODO:
-- Work on websocket connection with server
 */
 
 /*
@@ -138,10 +137,8 @@ function firstContact(){
 function makeMove(col){
     let message = {
         memo: 'makeMove',
-        data: {
-            col,
-            token
-        }
+        col,
+        token
     }
     ws.send(JSON.stringify(message));
 }
@@ -199,7 +196,8 @@ function didBadRequest(message){
 
 function sendPing(){
     let message = {
-        memo: "ping"
+        memo: "ping",
+        token
     }
     ws.send(JSON.stringify(message));
 }

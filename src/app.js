@@ -67,20 +67,30 @@ wss.on('connection', (client) => {
     client.on('message', (message) => {
         try{
             message = JSON.parse(message);
+            
         }catch{
             console.log('Did not receive correctly formatted JSON message')
             return;
         }
         
+        let decoded;
         if(message.memo === 'firstContact'){
             console.log('A user is joining session ' + message.sessionID);
             wsHandler.firstContact(message.sessionID, client, sessionManager);
         }
-        else if(message.memo === 'makeMove'){
+        else{
+            try {
+                decoded = jwt.verify(message.token, process.env.TOKEN_SECRET);
+            }
+            catch(e){
+                console.log('Received invalid JSON Web Token');
+            }
+        }
+
+        if(message.memo === 'makeMove'){
             try{
-                let decoded = jwt.verify(message.data.token, process.env.TOKEN_SECRET);
                 console.log('Make move request from session: ' + decoded.sessionID + ', player: ' + decoded.role);
-                wsHandler.moveMade(message.data, client, sessionManager)
+                wsHandler.moveMade(message, client, sessionManager);
             }
             catch(e){
                 console.log('Error occured for makeMove');
