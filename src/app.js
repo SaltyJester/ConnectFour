@@ -95,8 +95,8 @@ wss.on('connection', (client) => {
             wsHandler.moveMade(sessionID, role, message.col, client, sessionManager);
         }
         else if(message.memo === 'requestRematch'){
-            console.log('Rematch requested')
-            wsHandler.rematchRequested(message.token, sessionManager);
+            console.log('Player ' + decoded.role + ' in session ' + decoded.sessionID + 'requested a rematch');
+            wsHandler.rematchRequested(decoded.sessionID, client, sessionManager);
         }
         else if(message.memo === 'throwTowel'){
             console.log('someone is a quiter');

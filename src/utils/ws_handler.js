@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const {ConnectFour} = require('./game');
 
 /**
  * When clients intially connect to the server, they need to be assigned a player role
@@ -6,6 +7,8 @@ const jwt = require('jsonwebtoken');
  * First client to join is assigned 1 or 2 randomly,
  * next client to join will get the opposite role to the first client,
  * all clients thereafter are designated as spectators.
+ * 
+ * TODO: Need to clean this code up
  */
 function firstContact(sessionID ,client, sessionManager){
     let sessionData = sessionManager.sessions[sessionID];
@@ -49,7 +52,7 @@ Users are authenticated via JWT
 */
 function moveMade(sessionID, role, col, client, sessionManager){
     let sessionData = sessionManager.sessions[sessionID];
-    if(!sessionData){
+    if(!sessionData){ // not even sure if this condition is necessary
         gotBadRequest('sessionID does not exist', client);
     }
     if(sessionData.bothPartiesPresent){
@@ -64,12 +67,14 @@ function moveMade(sessionID, role, col, client, sessionManager){
     }
 }
 
-function rematchRequested(token, sessionManager){
-    try{
-        // let decoded 
+function rematchRequested(sessionID, client, sessionManager){
+    let sessionData = sessionManager.sessions[sessionID];
+    if(sessionData.game.gameState != 0){
+        sessionData.game = new ConnectFour();
+        describeState(sessionData);
     }
-    catch(e){
-
+    else{
+        gotBadRequest('Game is still in progress', client);
     }
 }
 
@@ -108,5 +113,6 @@ function gotBadRequest(error, client){
 module.exports = {
     firstContact,
     describeState,
-    moveMade
+    moveMade,
+    rematchRequested
 }

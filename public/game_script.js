@@ -17,6 +17,7 @@ let board;
 let curPlayer;
 let gameState; // not used at the moment
 let bothPartiesPresent;
+let rematchOption;
 let token;
 let moves = []; // for testing purposes
 
@@ -148,6 +149,7 @@ function requestRematch(){
         memo: 'requestRematch',
         token
     }
+    ws.send(JSON.stringify(message));
 }
 
 function roleDescribed(message){
@@ -161,6 +163,13 @@ function stateDescribed(message){
     curPlayer = message.curPlayer;
     gameState = message.gameState;
     bothPartiesPresent = message.bothPartiesPresent;
+    rematchOption = message.rematchOption;
+
+    let actionButton = document.getElementById('action_button');
+    if(rematchOption)
+        actionButton.innerHTML = 'Request Rematch';
+    else
+        actionButton.innerHTML = 'Forfeit';
 
     let turnIndicator = document.getElementById('turn_indicator');
     if(role == 1 || role == 2){ // for the actual two players
