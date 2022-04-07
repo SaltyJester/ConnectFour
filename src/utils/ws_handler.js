@@ -62,24 +62,6 @@ function moveMade(sessionID, role, col, client, sessionManager){
     else{
         gotBadRequest('Both parties not present', client);
     }
-    // try{
-    //     let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
-    //     let sessionData = sessionManager.sessions[decoded.sessionID]
-    //     if(sessionData.bothPartiesPresent){
-    //         let status = sessionData.game.makeMove(moveData.col, decoded.role);
-    //         if(status == 0)
-    //             describeState(sessionData);
-    //         else
-    //             gotBadRequest(status, client);
-    //     }
-    //     else{
-    //         gotBadRequest('Both parties not present', client);
-    //     }
-    // }
-    // catch(e){
-    //     // console.log('JWT is invalid');
-    //     gotBadRequest('JWT is invalid', client);
-    // }
 }
 
 function rematchRequested(token, sessionManager){

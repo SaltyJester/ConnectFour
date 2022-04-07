@@ -73,11 +73,10 @@ test('Players cannot make a move when both parties are not present', () => {
     wsHandler.firstContact(game_1, client_1, sessionManager);
     client_1_token = client_1.log[0].token;
 
-    let moveData = {
-        col: 1,
-        token: client_1_token
-    };
-    wsHandler.moveMade(moveData, client_1, sessionManager);
+    let col = 1;
+    let decoded = jwt.verify(client_1_token, process.env.TOKEN_SECRET);
+
+    wsHandler.moveMade(decoded.sessionID, decoded.role, col, client_1, sessionManager);
     expect(client_1.log[2].memo).toEqual('badRequest');
     expect(client_1.log[2].error).toEqual('Both parties not present');
 });
@@ -86,22 +85,18 @@ test('Players can make a move when both parties are present', () => {
     wsHandler.firstContact(game_1, client_1, sessionManager);
     wsHandler.firstContact(game_1, client_2, sessionManager);
 
-    // client_1_token = client_1.log[0].token;
-    // console.log(jwt.verify(client_1_token, process.env.TOKEN_SECRET));
-
-    let moveData = {
-        col: 1,
-        token: undefined
-    };
+    let col = 1;
+    let decoded;
 
     if(client_1.log[0].profile.role == 1){
-        moveData.token = client_1.log[0].token;
-        wsHandler.moveMade(moveData, client_1, sessionManager);
+        decoded = jwt.verify(client_1.log[0].token, process.env.TOKEN_SECRET);
+        wsHandler.moveMade(decoded.sessionID, decoded.role, col, client_1, sessionManager);
         expect(client_1.log[client_1.log.length - 1].memo).toEqual('describeState');
     }
     else{
+        decoded = jwt.verify(client_1.log[0].token, process.env.TOKEN_SECRET);
         moveData.token = client_2.log[0].token;
-        wsHandler.moveMade(moveData, client_2, sessionManager);
+        wsHandler.moveMade(decoded.sessionID, decoded.role, col, client_2, sessionManager);
         expect(client_2.log[client_2.log.length - 1].memo).toEqual('describeState');
     }
 });
@@ -110,25 +105,24 @@ test('Players can make a move when both parties are present', () => {
 
 // test to make sure players can't make moves when game has ended
 
-test('Players with invalid JWT will get a badRequest memo', () => {
-    wsHandler.firstContact(game_1, client_1, sessionManager);
-    wsHandler.firstContact(game_1, client_2, sessionManager);
-    let token = jwt.sign({
-        id: 0,
-        role: 1,
-    }, 'fakeKey');
-    
-    let moveData = {
-        memo: 'makeMove',
-        data: {
-            col: 1,
-            token
-        }
-    };
+/**
+ * JWT are no longer verified within ws_handler, so this test case no makes sense
+ */
+// test('Players with invalid JWT will get a badRequest memo', () => {
+//     wsHandler.firstContact(game_1, client_1, sessionManager);
+//     wsHandler.firstContact(game_1, client_2, sessionManager);
+//     let token = jwt.sign({
+//         id: 0,
+//         role: 1,
+//         sessionID: game_1
+//     }, 'fakeSecret');
 
-    wsHandler.moveMade(moveData, client_1, sessionManager);
-    expect(client_1.log[client_1.log.length - 1].memo).toEqual('badRequest');
-});
+//     let col = 1;
+//     let decoded = jwt.verify(token, 'fakeSecret')
+
+//     wsHandler.moveMade(decoded.sessionID, decoded.role, col, client_1, sessionManager);
+//     expect(client_1.log[client_1.log.length - 1].memo).toEqual('badRequest');
+// });
 
 expect.extend({
     toBeWithinRange(num, min, max){

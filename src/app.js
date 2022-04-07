@@ -88,13 +88,7 @@ wss.on('connection', (client) => {
         }
 
         if(message.memo === 'makeMove'){
-            // try{
-            //     console.log('Make move request from session: ' + decoded.sessionID + ', player: ' + decoded.role);
-            //     wsHandler.moveMade(message, client, sessionManager);
-            // }
-            // catch(e){
-            //     console.log('Error occured for makeMove');
-            // }
+   
             let sessionID = decoded.sessionID;
             let role = decoded.role;
             console.log('Make move request from session: ' + sessionID + ', player: ' + role);
