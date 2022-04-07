@@ -47,25 +47,39 @@ function firstContact(sessionID ,client, sessionManager){
 Need to notify users of bad requests
 Users are authenticated via JWT
 */
-function moveMade(moveData, client, sessionManager){
-    try{
-        let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
-        let sessionData = sessionManager.sessions[decoded.sessionID]
-        if(sessionData.bothPartiesPresent){
-            let status = sessionData.game.makeMove(moveData.col, decoded.role);
-            if(status == 0)
-                describeState(sessionData);
-            else
-                gotBadRequest(status, client);
-        }
-        else{
-            gotBadRequest('Both parties not present', client);
-        }
+function moveMade(sessionID, role, col, client, sessionManager){
+    let sessionData = sessionManager.sessions[sessionID];
+    if(!sessionData){
+        gotBadRequest('sessionID does not exist', client);
     }
-    catch(e){
-        // console.log('JWT is invalid');
-        gotBadRequest('JWT is invalid', client);
+    if(sessionData.bothPartiesPresent){
+        let status = sessionData.game.makeMove(col, role);
+        if(status == 0)
+            describeState(sessionData);
+        else
+            gotBadRequest(status, client);
     }
+    else{
+        gotBadRequest('Both parties not present', client);
+    }
+    // try{
+    //     let decoded = jwt.verify(moveData.token, process.env.TOKEN_SECRET);
+    //     let sessionData = sessionManager.sessions[decoded.sessionID]
+    //     if(sessionData.bothPartiesPresent){
+    //         let status = sessionData.game.makeMove(moveData.col, decoded.role);
+    //         if(status == 0)
+    //             describeState(sessionData);
+    //         else
+    //             gotBadRequest(status, client);
+    //     }
+    //     else{
+    //         gotBadRequest('Both parties not present', client);
+    //     }
+    // }
+    // catch(e){
+    //     // console.log('JWT is invalid');
+    //     gotBadRequest('JWT is invalid', client);
+    // }
 }
 
 function rematchRequested(token, sessionManager){
