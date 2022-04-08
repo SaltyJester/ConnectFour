@@ -64,6 +64,13 @@ function clickHandler(event){
     makeMove(col);
 }
 
+function actionButton(){
+    if(gameState != 0)
+        requestRematch();
+    else
+        requestForfeit();
+}
+
 /*
 This handler will highlight the empty spaces in a column when a mouse hovers over it.
 Purpose is to aid in column selection.
@@ -135,6 +142,12 @@ function firstContact(){
     ws.send(JSON.stringify(message));
 }
 
+function roleDescribed(message){
+    clientID = message.profile.id;
+    role = message.profile.role;
+    token = message.token;
+}
+
 function makeMove(col){
     let message = {
         memo: 'makeMove',
@@ -152,10 +165,12 @@ function requestRematch(){
     ws.send(JSON.stringify(message));
 }
 
-function roleDescribed(message){
-    clientID = message.profile.id;
-    role = message.profile.role;
-    token = message.token;
+function requestForfeit(){
+    let message = {
+        memo: 'requestForfeit',
+        token
+    }
+    ws.send(JSON.stringify(message));
 }
 
 function stateDescribed(message){
@@ -166,6 +181,8 @@ function stateDescribed(message){
     rematchOption = message.rematchOption;
 
     let actionButton = document.getElementById('action_button');
+    if(bothPartiesPresent)
+        actionButton.disabled = false;
     if(rematchOption)
         actionButton.innerHTML = 'Request Rematch';
     else

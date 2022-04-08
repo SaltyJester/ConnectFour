@@ -73,14 +73,18 @@ wss.on('connection', (client) => {
             return;
         }
         
-        let decoded;
+        // let decoded;
+        let sessionID;
+        let role;
         if(message.memo === 'firstContact'){
             console.log('A user is joining session ' + message.sessionID);
             wsHandler.firstContact(message.sessionID, client, sessionManager);
         }
         else{
             try {
-                decoded = jwt.verify(message.token, process.env.TOKEN_SECRET);
+                let decoded = jwt.verify(message.token, process.env.TOKEN_SECRET);
+                sessionID = decoded.sessionID;
+                role = decoded.role;
             }
             catch(e){
                 console.log('Received invalid JSON Web Token');
@@ -88,18 +92,16 @@ wss.on('connection', (client) => {
         }
 
         if(message.memo === 'makeMove'){
-   
-            let sessionID = decoded.sessionID;
-            let role = decoded.role;
             console.log('Make move request from session: ' + sessionID + ', player: ' + role);
             wsHandler.moveMade(sessionID, role, message.col, client, sessionManager);
         }
         else if(message.memo === 'requestRematch'){
-            console.log('Player ' + decoded.role + ' in session ' + decoded.sessionID + 'requested a rematch');
-            wsHandler.rematchRequested(decoded.sessionID, client, sessionManager);
+            console.log('Player ' + role + ' in session ' + sessionID + 'requested a rematch');
+            wsHandler.rematchRequested(sessionID, client, sessionManager);
         }
-        else if(message.memo === 'throwTowel'){
-            console.log('someone is a quiter');
+        else if(message.memo === 'requestForfeit'){
+            console.log('Player ' + role + ' in session ' + sessionID + ' is a quiter');
+            wsHandler.forfeitRequested(sessionID, role, client, sessionManager);
         }
     });
 });

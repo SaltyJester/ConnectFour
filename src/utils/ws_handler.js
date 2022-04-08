@@ -78,8 +78,20 @@ function rematchRequested(sessionID, client, sessionManager){
     }
 }
 
-function towelThrown(sessionManager){
-
+function forfeitRequested(sessionID, role, client, sessionManager){
+    let sessionData = sessionManager.sessions[sessionID];
+    if(sessionData.bothPartiesPresent){
+        if(role == 1){
+            sessionData.game.gameState = 2;
+        }
+        else{
+            sessionData.game.gameState = 1;
+        }
+        describeState(sessionData);
+    }
+    else{
+        gotBadRequest('Both parties not present', client);
+    }
 }
 
 /**
@@ -114,5 +126,6 @@ module.exports = {
     firstContact,
     describeState,
     moveMade,
-    rematchRequested
+    rematchRequested,
+    forfeitRequested
 }
