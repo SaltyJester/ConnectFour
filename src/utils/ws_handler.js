@@ -36,6 +36,7 @@ function firstContact(sessionID ,client, sessionManager){
     sessionData.clients[profile.id] = {
         ws: client,
         role: profile.role,
+        lastPing: Date.now()
     }
 
     client.send(JSON.stringify({
@@ -122,10 +123,17 @@ function gotBadRequest(error, client){
     client.send(JSON.stringify(message));
 }
 
+function heartbeat(sessionID, clientID, sessionManager){
+    let sessionData = sessionManager.sessions[sessionID];
+    let client = sessionData.clients[clientID];
+    client.lastPing = Date.now();
+}
+
 module.exports = {
     firstContact,
     describeState,
     moveMade,
     rematchRequested,
-    forfeitRequested
+    forfeitRequested,
+    heartbeat
 }

@@ -76,6 +76,7 @@ wss.on('connection', (client) => {
         // let decoded;
         let sessionID;
         let role;
+        let clientID;
         if(message.memo === 'firstContact'){
             console.log('A user is joining session ' + message.sessionID);
             wsHandler.firstContact(message.sessionID, client, sessionManager);
@@ -85,6 +86,7 @@ wss.on('connection', (client) => {
                 let decoded = jwt.verify(message.token, process.env.TOKEN_SECRET);
                 sessionID = decoded.sessionID;
                 role = decoded.role;
+                clientID = decoded.id;
             }
             catch(e){
                 console.log('Received invalid JSON Web Token');
@@ -103,5 +105,26 @@ wss.on('connection', (client) => {
             console.log('Player ' + role + ' in session ' + sessionID + ' is a quiter');
             wsHandler.forfeitRequested(sessionID, role, client, sessionManager);
         }
+        else if(message.memo === 'heartbeat'){
+            wsHandler.heartbeat(sessionID, clientID, sessionManager)
+        }
     });
 });
+
+wss.on('disconnect', (client) => {
+    console.log('someone just left ' + client)
+});
+
+// setInterval(() => {
+//     try{
+//         let sessionData = sessionManager.sessions[0];
+//         console.log(sessionData);
+//         message = {
+//             memo: "test"
+//         }
+//         sessionData.clients[0].ws.send(JSON.stringify(message));
+//     }
+//     catch(e){
+
+//     }
+// }, 3000)

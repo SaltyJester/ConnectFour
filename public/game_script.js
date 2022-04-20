@@ -220,10 +220,10 @@ function didBadRequest(message){
     console.log('Do something with error message')
 }
 
-function sendPing(){
-    let message = {
-        memo: "ping",
-        token
-    }
-    ws.send(JSON.stringify(message));
-}
+// function sendPing(){
+//     let message = {
+//         memo: "ping",
+//         token
+//     }
+//     ws.send(JSON.stringify(message));
+// }
