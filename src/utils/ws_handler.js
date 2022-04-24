@@ -80,7 +80,7 @@ function rematchRequested(sessionID, client, sessionManager){
     }
 }
 
-function forfeitRequested(sessionID, role, client, sessionManager){
+function forfeitRequested(sessionID, role, sessionManager){
     let sessionData = sessionManager.sessions[sessionID];
     if(sessionData.bothPartiesPresent){
         if(role == 1){
@@ -91,9 +91,9 @@ function forfeitRequested(sessionID, role, client, sessionManager){
         }
         describeState(sessionData);
     }
-    else{
-        gotBadRequest('Both parties not present', client);
-    }
+    // else{
+    //     gotBadRequest('Both parties not present', client);
+    // }
 }
 
 /**
