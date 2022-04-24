@@ -115,16 +115,23 @@ wss.on('disconnect', (client) => {
     console.log('someone just left ' + client)
 });
 
-// setInterval(() => {
-//     try{
-//         let sessionData = sessionManager.sessions[0];
-//         console.log(sessionData);
-//         message = {
-//             memo: "test"
-//         }
-//         sessionData.clients[0].ws.send(JSON.stringify(message));
-//     }
-//     catch(e){
+setInterval(() => {
+    let deadPlayers = sessionManager.checkPulse();
+    if(deadPlayers.length > 0){
+        deadPlayers.forEach((dead) => {
+            // wsHandler.forfeitRequested(dead.sessionID, dead.)
+        })
+    }
+    // console.log(data)
+    // try{
+    //     let sessionData = sessionManager.sessions[0];
+    //     console.log(sessionData);
+    //     message = {
+    //         memo: "test"
+    //     }
+    //     sessionData.clients[0].ws.send(JSON.stringify(message));
+    // }
+    // catch(e){
 
-//     }
-// }, 3000)
+    // }
+}, 10000)

@@ -18,6 +18,26 @@ class SessionManager{
         this.sessions[this.nextSessionID] = sessionData;
         return this.nextSessionID++;
     }
+
+    checkPulse(){
+        let dead = [];
+        for(const [sessionID, sessionData] of Object.entries(this.sessions)){
+            let clients = sessionData.clients;
+            for(const [clientID, clientData] of Object.entries(clients)){
+                // console.log(clientData.lastPing);
+                if(clientData.lastPing < this.lastTimeStamp && !clientData.dead){
+                    clientData.dead = true;
+                    dead.push({ 
+                        sessionID, 
+                        clientID,
+                        role: clientData.role
+                    });
+                }
+            }
+        }
+        this.lastTimeStamp = Date.now();
+        return dead;
+    }
 }
 
 // do i want session manager checking lastPing of every client or have a separate class for sessionData that only checks for it's own domain?

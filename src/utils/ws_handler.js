@@ -36,7 +36,8 @@ function firstContact(sessionID ,client, sessionManager){
     sessionData.clients[profile.id] = {
         ws: client,
         role: profile.role,
-        lastPing: Date.now()
+        lastPing: Date.now(),
+        dead: false
     }
 
     client.send(JSON.stringify({

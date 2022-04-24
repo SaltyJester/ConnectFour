@@ -220,6 +220,18 @@ function didBadRequest(message){
     console.log('Do something with error message')
 }
 
+function heartbeat(){
+    let message = {
+        memo: 'heartbeat',
+        token
+    }
+    ws.send(JSON.stringify(message));
+}
+
+setInterval(() => {
+    heartbeat();
+}, 5000);
+
 // function sendPing(){
 //     let message = {
 //         memo: "ping",
